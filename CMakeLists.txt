@@ -24,6 +24,9 @@ file(GLOB_RECURSE sources
 )
 
 add_executable(Lagrange ${sources})
+add_executable(nbody_cuda
+        src/nbody.cu
+)
 
 set_target_properties(Lagrange PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON)
