@@ -107,4 +107,30 @@ public:
         }
     }
 
+    double calculateEnergy () const {
+        double kinetic = 0.0;
+        double potential = 0.0;
+
+        for (int i = 0; i < n; i++) {
+            double vSq = 0.0;
+            for (int d = 0; d < DIM; d++) {
+                vSq += bodies[i].vel[d] * bodies[i].vel[d];
+            }
+            kinetic += 0.5 * bodies[i].mass * vSq;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                double rSq = SOFTENING * SOFTENING;
+                for (int d = 0; d < DIM; d++) {
+                    const double dr = bodies[j].pos[d] - bodies[i].pos[d];
+                    rSq += dr * dr;
+                }
+                potential -= G * bodies[i].mass * bodies[j].mass / std::sqrt(rSq);
+            }
+        }
+
+        return kinetic + potential;
+    }
+
 };
