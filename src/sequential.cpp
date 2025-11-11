@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <chrono>
 
 constexpr int N_BODIES = 1024;
 constexpr double TOTAL_TIME = 10.0;
@@ -144,7 +145,7 @@ public:
 
         // loop starts here
         const int nSteps = static_cast<int>(TOTAL_TIME / DT);
-        const clock_t start = clock();
+        auto start = std::chrono::high_resolution_clock::now();
 
         std::cout << "Starting simulation... \n";
         for (int step = 0; step <= nSteps; step++) {
@@ -166,23 +167,23 @@ public:
             }
         }
 
-        const clock_t end = clock();
-        const double elapsed = static_cast<double>(end - start) / CLOCKS_PER_SEC; // this is in seconds
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
 
         const double finalEnergy = calculateEnergy();
-        const double energyError = std::abs((finalEnergy - initialEnergy) / initialEnergy);
+        const double energyError = std::abs((finalEnergy - initialEnergy) / initialEnergy) * 100.0;
         std::cout << "\nSimulation done\n";
         std::cout << "===================\n";
         std::cout << std::fixed << std::setprecision(3);
-        std::cout << "Elapsed time: " << elapsed << " seconds\n";
-        std::cout << "Time per step: " << (elapsed * 1000.0 / nSteps) << " ms\n";
+        std::cout << "Elapsed time: " << elapsed.count() << " seconds\n";
+        std::cout << "Time per step: " << (elapsed.count() * 1000.0 / nSteps) << " ms\n";
         std::cout << std::scientific << std::setprecision(6);
         std::cout << "Initial energy: " << initialEnergy << " J\n";
         std::cout << "Final energy: " << finalEnergy << " J\n";
         std::cout << std::fixed << std::setprecision(6);
         std::cout << "Energy error: " << energyError << "%\n";
         std::cout << std::setprecision(3);
-        std::cout << "Performance: " << (static_cast<double>(N_BODIES) * N_BODIES * nSteps / elapsed / 1e6) << " M-interactions/sec\n";
+        std::cout << "Performance: " << (static_cast<double>(N_BODIES) * N_BODIES * nSteps / elapsed.count() / 1e6) << " M-interactions/sec\n";
     }
 };
 
