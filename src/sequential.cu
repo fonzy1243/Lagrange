@@ -39,3 +39,23 @@ struct NBodySystem
         delete[] bodies;
     }
 };
+
+float randomFloat(const float min, const float max)
+{
+    return min + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (max - min);
+}
+
+void initBodies(const NBodySystem* system, float posRange, float velRange, float massRange)
+{
+    srand(0); // for error checking later, I used fixed seed value
+
+    for (int i = 0; i < system->n; ++i)
+    {
+        for (int d = 0; d < DIMENSION; ++d)
+        {
+            system->bodies[i].pos[d] = randomFloat(-posRange, posRange);
+            system->bodies[i].vel[d] = randomFloat(-velRange, velRange);
+        }
+        system->bodies[i].mass = randomFloat(1.0f, massRange);
+    }
+}
