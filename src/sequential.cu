@@ -3,24 +3,28 @@
 #include <cstring>
 #include <chrono>
 
-constexpr int DIMENSIONS = 3;
 constexpr int N_BODIES = 1024;
-constexpr float TOTAL_TIME = 1.0f;
-constexpr float DT = 0.01f;
-constexpr float G = 6.674e-11f;
-constexpr float G_CONST = 1.0f;
-constexpr float EPSILON = 0.1f;
+constexpr double TOTAL_TIME = 3.154e7;
+constexpr double DT = 86400.0;
+constexpr int OUTPUT_INTERVAL = 10;
 
-constexpr int SAVE_EVERY_N_STEPS = 5;
+constexpr int DIM = 3;
+constexpr double G = 6.67430e-11;
+constexpr double SOFTENING = 1e9;
 
-typedef struct
+struct Body
 {
-    double pos[DIMENSIONS];
-    double vel[DIMENSIONS];
-    double acc[DIMENSIONS];
-    double newAcc[DIMENSIONS];
+    double pos[DIM];
+    double vel[DIM];
+    double acc[DIM];
     double mass;
-} Body;
+
+    Body() : mass(0.0) {
+        for (int d = 0; d < DIM; d++) {
+            pos[d] = vel[d] = acc[d] = 0.0;
+        }
+    }
+};
 
 struct NBodySystem
 {
@@ -48,9 +52,9 @@ void initBodies(const NBodySystem* system, float posRange, float velRange, float
 {
     srand(0); // for error checking later, I used fixed seed value
 
-    for (int i = 0; i < system->n; ++i)
+    for (int i = 0; i < system->n; i++)
     {
-        for (int d = 0; d < DIMENSIONS; ++d)
+        for (int d = 0; d < DIM; d++)
         {
             system->bodies[i].pos[d] = randomFloat(-posRange, posRange);
             system->bodies[i].vel[d] = randomFloat(-velRange, velRange);
@@ -59,35 +63,40 @@ void initBodies(const NBodySystem* system, float posRange, float velRange, float
     }
 }
 
-void calculateAcc(NBodySystem* system)
+void computeForces(const NBodySystem* system)
 {
     for (int i = 0; i < system->n; ++i)
     {
-        float totalAccX = 0.0f;
-        float totalAccY = 0.0f;
-        float totalAccZ = 0.0f;
-
-        for (int j = 0; j < system->n; ++j)
+        for (int d = 0; d < DIM; ++d)
         {
-            if (i == j) continue;
-
-            float dx = system->bodies[j].pos[0] - system->bodies[i].pos[0];
-            float dy = system->bodies[j].pos[1] - system->bodies[i].pos[1];
-            float dz = system->bodies[j].pos[2] - system->bodies[i].pos[2];
-
-            float distSq = (dx * dx) + (dy * dy) + (dz * dz) + (EPSILON * EPSILON);
-
-            float invDist = 1.0f / sqrt(distSq);
-            float invDistCubed = invDist * invDist * invDist;
-
-            float jMass = system->bodies[j].mass;
-            totalAccX += G * jMass * dx * invDistCubed;
-            totalAccY += G * jMass * dy * invDistCubed;
-            totalAccZ += G * jMass * dz * invDistCubed;
+            system->bodies[i].acc[d] = 0.0;
         }
+    }
 
-        system->bodies[i].newAcc[0] = totalAccX;
-        system->bodies[i].newAcc[1] = totalAccY;
-        system->bodies[i].newAcc[2] = totalAccZ;
+    for (int i = 0; i < system->n; i++)
+    {
+        for (int j = i + 1; j < system->n; j++)
+        {
+            double r[DIM];
+            double distSq = SOFTENING * SOFTENING;
+
+            for (int d = 0; d < DIM; d++)
+            {
+                r[d] = system->bodies[j].pos[d] - system->bodies[i].pos[d];
+                distSq += r[d] * r[d];
+            }
+
+            const double dist = std::sqrt(distSq);
+            const double denominator = distSq * dist;
+
+            const double forceMag = G * system->bodies[i].mass * system->bodies[j].mass / denominator;
+
+            for (int d = 0; d < DIM; d++)
+            {
+                const double forceD = forceMag * r[d];
+                system->bodies[i].acc[d] += forceD / system->bodies[i].mass;
+                system->bodies[j].acc[d] -= forceD / system->bodies[j].mass;
+            }
+        }
     }
 }
