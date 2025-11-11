@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 project(Lagrange CUDA CXX C)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CUDA_STANDARD 23)
 
 find_package(OpenGL REQUIRED)
