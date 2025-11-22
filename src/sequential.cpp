@@ -2,6 +2,7 @@
 #include <vector>
 #include <iomanip>
 #include <chrono>
+#include <random>
 
 constexpr int N_BODIES = 1024;
 constexpr double TOTAL_TIME = 10.0;
@@ -40,16 +41,21 @@ public:
         return min + (static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (max - min);
     }
 
-    void initBodies(const double posRange, const double velRange, const double minMass, const double maxMass) {
-        srand(0); // for error checking later, I used fixed seed value
+    void initBodies() {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+
+        std::uniform_real_distribution<double> posDist(-1.0, 1.0); 
+        std::uniform_real_distribution<double> velDist(0.0, 0.0); 
+        std::uniform_real_distribution<double> massDist(0.5, 1.5); 
 
         for (int i = 0; i < N_BODIES; i++) {
             for (int d = 0; d < DIM; d++) {
-                bodies[i].pos[d] = randomDouble(-posRange, posRange);
-                bodies[i].vel[d] = randomDouble(-velRange, velRange);
+                bodies[i].pos[d] = posDist(gen);
+                bodies[i].vel[d] = velDist(gen);
                 bodies[i].acc[d] = 0.0;
             }
-            bodies[i].mass = randomDouble(minMass, maxMass);
+            bodies[i].mass = massDist(gen);
         }
     }
 
@@ -190,7 +196,7 @@ public:
 int main(int argc, char *argv[]) {
     NBodySystem nBodySystem;
 
-    nBodySystem.initBodies(1.0, 0.2, 0.5, 1.5);
+    nBodySystem.initBodies();
     nBodySystem.run();
 
     return 0;
