@@ -23,7 +23,8 @@ file(GLOB_RECURSE sources
         "${GLAD_GL}/*.c"
 )
 
-add_executable(Lagrange ${sources})
+add_executable(Lagrange ${sources}
+        src/Sequential.hpp)
 
 set_target_properties(Lagrange PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON)
