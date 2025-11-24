@@ -9,8 +9,8 @@
 #define NULL_PTR (-1)
 #define LOCKED (-2)
 
-#define G 0.05
-#define THETA 0.5f
+#define G 0.5
+#define THETA 0.3f
 #define EPS 0.1f
 #define DT 0.001f
 
@@ -109,7 +109,7 @@ __global__ inline void compute_bounding_box(const float4* pos_mass, const int n_
 // Figure 6.9
 __global__ inline void build_tree(const float4* pos_mass, int* child_ptrs, const int n_bodies,
                            int* n_cells_counter, float4* cell_pos, float* radius_arr,
-                           int* cell_depth) {  // Add depth parameter
+                           int* cell_depth, const int max_nodes) {  // Add depth parameter
     int g_id = blockIdx.x * blockDim.x + threadIdx.x;
     const int root = n_bodies;
 
@@ -148,6 +148,11 @@ __global__ inline void build_tree(const float4* pos_mass, int* child_ptrs, const
 
         const int new_cell = atomicAdd(n_cells_counter, 1);
 
+        if (new_cell >= max_nodes) {
+            child_ptrs[child_idx] = dest;
+            break;
+        }
+
         const float4 parent_pos = cell_pos[curr];
         const float new_r = r * 0.5f;
         float4 new_pos = parent_pos;
@@ -164,14 +169,14 @@ __global__ inline void build_tree(const float4* pos_mass, int* child_ptrs, const
             child_ptrs[new_cell * 8 + i] = NULL_PTR;
         }
 
-        __threadfence();
-
-        child_ptrs[child_idx] = new_cell;
-
         const int old_body = dest;
         const float4 old_pos = pos_mass[old_body];
         const int old_octant = get_octant(old_pos, new_pos, new_r);
         child_ptrs[new_cell * 8 + old_octant] = old_body;
+
+        __threadfence();
+
+        child_ptrs[child_idx] = new_cell;
 
         curr = new_cell;
         r = new_r;
@@ -228,6 +233,11 @@ __global__ inline void compute_forces(const float4* pos_mass, float4* acc, const
     const float* radius_arr) {
     const int g_id = blockIdx.x * blockDim.x + threadIdx.x;
     if (g_id >= n_bodies) return;
+
+    if (g_id == 0) {
+        acc[g_id] = make_float4(0, 0, 0, 0);
+        return;
+    }
 
     const float4 my_pos = pos_mass[g_id];
     float4 my_acc = {};
@@ -419,6 +429,8 @@ __global__ inline void update_bodies(float4* pos_mass, float4* vel, const float4
     const int g_id = blockIdx.x * blockDim.x + threadIdx.x;
     if (g_id >= n_bodies) return;
 
+    if (g_id == 0) return;
+
     float4 p = pos_mass[g_id];
     float4 v = vel[g_id];
     float4 a = acc[g_id];
@@ -591,11 +603,12 @@ public:
                    cudaMemcpyHostToDevice);
         cudaMemcpy(&d_radius[n_bodies], &root_rad, sizeof(float),
                    cudaMemcpyHostToDevice);
+        cudaDeviceSynchronize();
 
         // Build tree
         build_tree<<<bodyBlocks, threadsPerBlock>>>(d_pos_mass, d_child_ptrs, n_bodies,
                                                      d_n_cells_count, d_pos_mass,
-                                                     d_radius, d_cell_depth);
+                                                     d_radius, d_cell_depth, total_nodes);
         cudaDeviceSynchronize();
 
         // Organize cells by depth
@@ -630,13 +643,6 @@ public:
         // Forces
         compute_forces<<<bodyBlocks, threadsPerBlock>>>(d_pos_mass, d_acc, d_child_ptrs,
                                                          n_bodies, n_bodies, d_radius);
-        cudaDeviceSynchronize();
-
-        // Collision detection
-        detect_collisions_tree<<<bodyBlocks, threadsPerBlock>>>(d_pos_mass, d_vel, d_child_ptrs, n_bodies, n_bodies, d_radius);
-        cudaDeviceSynchronize();
-
-        separate_overlaps_tree<<<bodyBlocks, threadsPerBlock>>>(d_pos_mass, d_child_ptrs, n_bodies, n_bodies, d_radius);
         cudaDeviceSynchronize();
 
         // Integration
