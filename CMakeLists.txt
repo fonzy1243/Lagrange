@@ -21,6 +21,7 @@ file(GLOB_RECURSE sources
         "${CMAKE_SOURCE_DIR}/src/*.c"
         "${CMAKE_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_SOURCE_DIR}/src/*.cu"
+        "${CMAKE_SOURCE_DIR}/include/nbody_naive/*.cpp"
         "${GLAD_GL}/*.c"
 )
 

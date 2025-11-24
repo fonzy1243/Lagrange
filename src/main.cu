@@ -18,6 +18,7 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 const int N_BODIES = 10000;
+const int N_STEPS = 10000;
 
 int main() {
     // glfw init and configure
@@ -63,9 +64,11 @@ int main() {
     // Initialize simulator
     std::cout << "Initializing simulator with " << N_BODIES << " bodies." << std::endl;
 
+    // Comment out depending on what implementation to demo
+    // Sequential simulator(N_BODIES, N_STEPS);
     BarnesHut simulator(N_BODIES);
 
-    // Initialize positions
+    // Initialize positions ==> TODO: Maybe we can put this inside BarnesHut's .initialize() na lang?
     float4* initial_pos = new float4[N_BODIES];
     float4* initial_vel = new float4[N_BODIES];
 
@@ -88,6 +91,8 @@ int main() {
     delete[] initial_pos;
     delete[] initial_vel;
 
+    // simulator.initialize();
+
     // Setup viewing matrices
     glm::mat4 projection = glm::perspective(45.0f * glm::pi<float>() / 180.f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
@@ -109,6 +114,19 @@ int main() {
         // Update simulation
         simulator.step();
         simulator.update_gl_buffer();
+
+        // auto bodies = simulator.getBodies();
+        // std::vector<float> positions;
+        // positions.reserve(bodies.size() * 3);
+        //
+        // for (const auto& body : bodies) {
+        //     for (int i = 0; i < 3; i++) {
+        //         positions.push_back(body.pos[i]);
+        //     }
+        // }
+        //
+        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        // glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), positions.data(), GL_DYNAMIC_DRAW);
 
         // Calculate camera position
         float time = (float)glfwGetTime();
