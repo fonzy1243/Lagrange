@@ -23,7 +23,7 @@ void processInput(GLFWwindow* window);
 
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
-const int N_BODIES = 100000;
+const int N_BODIES = 10000;
 
 Camera camera(glm::vec3(0.0f, 10.0f, 50.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -88,6 +88,8 @@ int main() {
 
 #ifdef USE_BARNES_HUT
     std::cout << "Using Barnes-Hut CUDA implementation" << std::endl;
+#elif defined(USE_NAIVE_CUDA)
+    std::cout << "Using naive CUDA implementation" << std::endl;
 #else
     std::cout << "Using naive CPU implementation" << std::endl;
 #endif
