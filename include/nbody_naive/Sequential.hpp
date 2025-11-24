@@ -3,12 +3,12 @@
 
 #include <vector>
 
-constexpr int N_BODIES = 1024;
+// constexpr int N_BODIES = 1024;
 constexpr int DIM = 3;
 constexpr double DT = 0.001;
 constexpr double G = 1.0;
 constexpr double SOFTENING = 1e-5;
-constexpr int N_STEPS = 10000;
+// constexpr int N_STEPS = 10000;
 
 struct Body {
     double pos[DIM]{};

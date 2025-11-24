@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <chrono>
 #include <random>
-#include "../../src/Sequential.hpp"
+#include "Sequential.hpp"
 
 Body::Body() : mass(0.0) {
     for (int d = 0; d < DIM; d++) {
