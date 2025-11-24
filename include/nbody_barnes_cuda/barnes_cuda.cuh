@@ -544,13 +544,31 @@ public:
 
     }
 
-    void initialize(const float4* initial_positions, const float4* initial_velocities) const {
+    void initialize(const float* initial_positions, const float* initial_velocities) const {
+        float4* h_pos = new float4[n_bodies];
+        float4* h_vel = new float4[n_bodies];
+
+        for (int i = 0; i < n_bodies; i++) {
+            h_pos[i].x = initial_positions[i * 4 + 0];
+            h_pos[i].y = initial_positions[i * 4 + 1];
+            h_pos[i].z = initial_positions[i * 4 + 2];
+            h_pos[i].w = initial_positions[i * 4 + 3];
+
+            h_vel[i].x = initial_velocities[i * 4 + 0];
+            h_vel[i].y = initial_velocities[i * 4 + 1];
+            h_vel[i].z = initial_velocities[i * 4 + 2];
+            h_vel[i].w = initial_velocities[i * 4 + 3];
+        }
+
         cudaMemcpy(d_pos_mass, initial_positions, n_bodies * sizeof(float4),
                    cudaMemcpyHostToDevice);
         cudaMemcpy(d_vel, initial_velocities, n_bodies * sizeof(float4),
                    cudaMemcpyHostToDevice);
 
         cudaMemset(d_acc, 0, n_bodies * sizeof(float4));
+
+        delete[] h_pos;
+        delete[] h_vel;
     }
 
     void setup_gl_interop(GLuint vertex_buffer) {

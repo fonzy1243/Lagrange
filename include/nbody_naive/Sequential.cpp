@@ -11,31 +11,31 @@ Body::Body() : mass(0.0) {
     }
 }
 
-::Sequential::Sequential(int numBodies, int numSteps) :
+::Sequential::Sequential(int numBodies) :
     numBodies(numBodies),
-    numSteps(numSteps)
+    gl_initialized(false),
+    vbo(0)
 {
     bodies.resize(numBodies);
     oldAcc.resize(numBodies * DIM);
 }
 
-void Sequential::initialize() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    std::uniform_real_distribution<float> posDist(-2.5f, 2.5f);
-    std::uniform_real_distribution<float> velDist(0.0f, 0.0f);
-    std::uniform_real_distribution<float> massDist(0.5f, 1.5f);
-
+void Sequential::initialize(const float* initial_pos, const float* initial_vel) {
     for (int i = 0; i < numBodies; i++) {
         for (int d = 0; d < DIM; d++) {
-            bodies[i].pos[d] = posDist(gen);
-            bodies[i].vel[d] = velDist(gen);
+            bodies[i].pos[d] = initial_pos[i * 4 + d];
+            bodies[i].vel[d] = initial_vel[i * 4 + d];
             bodies[i].acc[d] = 0.0f;
         }
-        bodies[i].mass = massDist(gen);
+        bodies[i].mass = initial_pos[i * 4 + 3];
     }
 }
+
+void Sequential::setup_gl_interop(GLuint vertex_buffer) {
+    vbo = vertex_buffer;
+    gl_initialized = true;
+}
+
 
 void Sequential::computeForces() {
     float distSq = SOFTENING * SOFTENING;
@@ -69,11 +69,19 @@ void Sequential::computeForces() {
 }
 
 void ::Sequential::update_gl_buffer() {
+    if (!gl_initialized) return;
+
+    float* buffer = new float[numBodies * 3];
     for (int i = 0; i < numBodies; i++) {
-        for (int d = 0; d < DIM; d++) {
-            bodies[i].vel[d] += 0.5f * (oldAcc[i * DIM + d] + bodies[i].acc[d]) * DT;
-        }
+        buffer[i * 3 + 0] = bodies[i].pos[0];
+        buffer[i * 3 + 1] = bodies[i].pos[1];
+        buffer[i * 3 + 2] = bodies[i].pos[2];
     }
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, numBodies * 3 * sizeof(float), buffer);
+
+    delete[] buffer;
 }
 
 std::vector<Body>& ::Sequential::getBodies() {
@@ -89,31 +97,4 @@ void ::Sequential::step() {
     }
 
     computeForces();
-}
-
-void ::Sequential::run() {
-    std::cout << "--- Phase 1: C++ Sequential N-Body Simulation ---" << std::endl;
-    std::cout << "Number of bodies: " << numBodies << std::endl;
-    std::cout << "Time steps: " << numSteps << std::endl;
-    std::cout << "===================\n";
-
-    auto start = std::chrono::high_resolution_clock::now();
-
-    std::cout << "Starting simulation... \n";
-    for (int step = 0; step <= numSteps; step++) {
-        update_gl_buffer();
-    }
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<float> elapsed = end - start;
-
-    // calculate GFLOPS
-    float interactionsPerStep = (float)numBodies * (float)(numBodies - 1) / 2.0f;
-    float flopsPerStep = interactionsPerStep * 20.0f + (float)numBodies * 15.0f;
-    float gFlops = (flopsPerStep * (float)numSteps) / (elapsed.count() * 1e9f);
-
-    std::cout << "===================\n";
-    std::cout << "Total execution time: " << elapsed.count() << " seconds\n";
-    std::cout << "Average time per step: " << (elapsed.count() * 1000.0f / (float)numSteps) << " ms\n";
-    std::cout << "Performance: " << gFlops << " GFLOPS\n";
 }
