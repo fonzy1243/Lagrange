@@ -79,9 +79,11 @@ int main() {
     // Initialize simulator
     std::cout << "Initializing simulator with " << N_BODIES << " bodies." << std::endl;
 
+    // Comment out depending on what implementation to demo
+    // Sequential simulator(N_BODIES, N_STEPS);
     BarnesHut simulator(N_BODIES);
 
-    // Initialize positions
+    // Initialize positions ==> TODO: Maybe we can put this inside BarnesHut's .initialize() na lang?
     float4* initial_pos = new float4[N_BODIES];
     float4* initial_vel = new float4[N_BODIES];
 

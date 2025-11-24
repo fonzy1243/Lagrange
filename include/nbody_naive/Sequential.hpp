@@ -1,38 +1,40 @@
-#ifndef N_BODY_SYSTEM_HPP
-#define N_BODY_SYSTEM_HPP
+#ifndef SEQUENTIAL_HPP
+#define SEQUENTIAL_HPP
 
 #include <vector>
 
 // constexpr int N_BODIES = 1024;
 constexpr int DIM = 3;
-constexpr double DT = 0.001;
-constexpr double G = 1.0;
-constexpr double SOFTENING = 1e-5;
+constexpr float DT = 0.001f;
+constexpr float G = 1.0f;
+constexpr float SOFTENING = 1e-5f;
 // constexpr int N_STEPS = 10000;
 
 struct Body {
-    double pos[DIM]{};
-    double vel[DIM]{};
-    double acc[DIM]{};
-    double mass;
+    float pos[DIM]{};
+    float vel[DIM]{};
+    float acc[DIM]{};
+    float mass;
 
     Body();
 };
 
-class NBodySystem {
+class Sequential {
 private:
     std::vector<Body> bodies;
-    std::vector<double> oldAcc;
+    std::vector<float> oldAcc;
 
     void computeForces();
 
 public:
-    NBodySystem();
+    Sequential(int numBodies, int numSteps);
 
-    void initBodies();
-    void integrateVelocityVerlet();
+    int numBodies;
+    int numSteps;
+    void initialize();
+    void update_gl_buffer();
 
-    const std::vector<Body>& getBodies() const;
+    std::vector<Body>& getBodies();
     void step();
     void run();
 };
