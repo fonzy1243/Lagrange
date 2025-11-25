@@ -4,21 +4,21 @@
 The N-body problem, a fundamental challenge in the field of physics, astrophysics, and molecular mechanics, involves the calculation of pairwise interactions among a system of particles. Traditional CPU-based implementations of this problem struggle with large-scale simulations due to the square growth of the number of interactions, which imposes a significant computational overhead. To address this, we propose leveraging NVIDIA’s Compute Unified Device Architecture (CUDA) and its Single Instruction Multiple Threads (SIMT) model to speed up these computations. Utilizing CUDA C++ as the primary programming language, we aim to compare the baseline performance of the algorithm with O(N2) force calculations to a parallelized implementation, including various memory and algorithmic optimizations, in terms of the metrics of execution time, memory bandwidth, and GFLOPS, among others. The project will be implemented primarily on a GPU platform, whereas the software stack includes CUDA Toolkit, NVCC, OpenGL, and NVIDIA Nsight Systems.
 
 ## Short Simulation/Execution of Programs for All Implementations
-1. Naive CPU Implementation\
+1. Naive CPU Implementation
 
 
 https://github.com/user-attachments/assets/30fda342-11e3-4bf5-971b-f77295875df6
 
 
 
-2. Naive CUDA Implementation\
+2. Naive CUDA Implementation
 
 
 https://github.com/user-attachments/assets/c6baf9ae-8dd4-4309-a29b-8e31fe19188c
 
 
 
-3. Barnes-Hut + CUDA Implementation\
+3. Barnes-Hut + CUDA Implementation
 
 
 https://github.com/user-attachments/assets/541ea4db-8b79-4d12-947b-84d8c18f33aa
@@ -93,4 +93,5 @@ Note: The Barnes-Hut figure is not the actual GLFOPS, rather it is the equivalen
 | **Barnes-Hut + CUDA** | **0.47189 GFLOPS** | **29.9933 GFLOPS** | **2767.23 GFLOPS** | **2.616e+06 GFLOPS** |
 
 ## Short Video Presenting the Final Project
-https://drive.google.com/file/d/1c2ytpLZ44CvkR99P6sxtljHpZgqqty6X
+- https://drive.google.com/file/d/1c2ytpLZ44CvkR99P6sxtljHpZgqqty6X
+- Project was also demoed synchronously through Zoom
