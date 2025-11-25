@@ -3,15 +3,15 @@
 ## Abstract
 The N-body problem, a fundamental challenge in the field of physics, astrophysics, and molecular mechanics, involves the calculation of pairwise interactions among a system of particles. Traditional CPU-based implementations of this problem struggle with large-scale simulations due to the square growth of the number of interactions, which imposes a significant computational overhead. To address this, we propose leveraging NVIDIA’s Compute Unified Device Architecture (CUDA) and its Single Instruction Multiple Threads (SIMT) model to speed up these computations. Utilizing CUDA C++ as the primary programming language, we aim to compare the baseline performance of the algorithm with O(N2) force calculations to a parallelized implementation, including various memory and algorithmic optimizations, in terms of the metrics of execution time, memory bandwidth, and GFLOPS, among others. The project will be implemented primarily on a GPU platform, whereas the software stack includes CUDA Toolkit, NVCC, OpenGL, and NVIDIA Nsight Systems.
 
-## Screenshot/Video of Execution of Programs for All Versions
-1. Naive CPU Implementation
-Insert video here.
+## Screenshot of Execution of Programs for All Versions
+1. Naive CPU Implementation\
+Insert screenshot here.
 
-2. Naive CUDA Implementation
-Insert video here.
+2. Naive CUDA Implementation\
+Insert screenshot here.
 
-3. Barnes-Hut + CUDA Implementation
-Insert video here.
+3. Barnes-Hut + CUDA Implementation\
+Insert screenshot here.
 
 ## Discussion of Parallel Algorithms Implemented in the Program
 
@@ -48,9 +48,9 @@ In this implementation, we reduce the complexity from $O(N^2)$ to $O(N \log N)$ 
     - With a Multipole Acceptance Criterion, the kernel checks the ratio of the cell radius to the distance (`width / dist < THETA`). If the node is sufficiently far, the thread computes the force using the cell's center of mass (`CoG`) and ceases traversal of that branch. This pruning of the traversal path is the source of the logarithmic speedup.
 - **Bottom-Up Parallel Reduction**
     - The `compute_cog` kernel implements a level-by-level parallel reduction.
-    - It organizes cells by depth using `organize_cells_by_depth` and processes them from the bottom of tree up to the root $(d = MAX\_DEPTH \rightarrow 0)$. This ensures that when a parent node is processed, its children have strictly finished their calculations, avoiding the need for global barriers.
+    - It organizes cells by depth using `organize_cells_by_depth` and processes them from the bottom of tree up to the root $(d = MAXDEPTH \rightarrow 0)$. This ensures that when a parent node is processed, its children have strictly finished their calculations, avoiding the need for global barriers.
 
-## Execution Time Comparison Between All Three Implementations
+## Performance Comparisons Between All Three Implementations
 The performance of each implementation was measured by averaging the execution time over 30 runs.
 
 **Table 1: Average Simulation Time of Each Implementation for N_STEPS = XXXXX**
