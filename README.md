@@ -1,7 +1,7 @@
 # Lagrange: Accelerating the N-Body Problem Using CUDA and SIMT
 
 ## Abstract
-The N-body problem, a fundamental challenge in the field of physics, astrophysics, and molecular mechanics, involves the calculation of pairwise interactions among a system of particles. Traditional CPU-based implementations of this problem struggle with large-scale simulations due to the square growth of the number of interactions, which imposes a significant computational overhead. To address this, we propose leveraging NVIDIA’s Compute Unified Device Architecture (CUDA) and its Single Instruction Multiple Threads (SIMT) model to speed up these computations. Utilizing CUDA C++ as the primary programming language, we aim to compare the baseline performance of the algorithm with O(N2) force calculations to a parallelized implementation, including various memory and algorithmic optimizations, in terms of the metrics of execution time, memory bandwidth, and GFLOPS, among others. The project will be implemented primarily on a GPU platform, whereas the software stack includes CUDA Toolkit, NVCC, OpenGL, and NVIDIA Nsight Systems.
+The N-body problem, a fundamental challenge in the field of physics, astrophysics, and molecular mechanics, involves the calculation of pairwise interactions among a system of particles. Traditional CPU-based implementations of this problem struggle with large-scale simulations due to the square growth of the number of interactions, which imposes a significant computational overhead. To address this, we propose leveraging NVIDIA’s Compute Unified Device Architecture (CUDA) and its Single Instruction Multiple Threads (SIMT) model to speed up these computations. Utilizing CUDA C++ as the primary programming language, we aim to compare the baseline performance of the algorithm with O(N2) force calculations to a parallelized implementation, including various memory and algorithmic optimizations, in terms of the metrics of execution time and memory bandwidth, among others. The project will be implemented primarily on a GPU platform, whereas the software stack includes CUDA Toolkit, NVCC, OpenGL, and NVIDIA Nsight Systems.
 
 ## Short Simulation/Execution of Programs for All Implementations
 1. Naive CPU Implementation\
@@ -82,15 +82,24 @@ Note: Relative speedup is not shown for N_BODIES greater than 10,000 as the CPU 
 | **Barnes-Hut + CUDA** | **0.523x** | **29.382x** | **-** | **-** |
 
 
-**Table 3: GFLOPS Comparison of Each Implementation**
-
-Note: The Barnes-Hut figure is not the actual GLFOPS, rather it is the equivalent of what it would take based on the naive all-bodies implementation.
+**Table 3: Naive CUDA vs. Barnes-Hut CUDA Average Memory Throughput**
 
 | Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Naive CPU** | 0.21606 GFLOPS | 1.0313 GFLOPS | N/A | N/A |
-| **Naive CUDA**| 0.82887 GFLOPS | 82.373 GFLOPS | 795.61 GFLOPS | N/A |
-| **Barnes-Hut + CUDA** | **0.47189 GFLOPS** | **29.9933 GFLOPS** | **2767.23 GFLOPS** | **2.616e+06 GFLOPS** |
+| **Naive CUDA**| 1.852 GB/s | 8.413 GB/S | 10.842 GB/s | N/A |
+| **Barnes-Hut + CUDA** | **50.391 MB/s** | **49.582 MB/s** | **51.113 MB/s** | **52.202 MB/s** |
+
+Memory throughput was measured using NVIDIA Visual Profiler Version 12.9
 
 ## Short Video Presenting the Final Project
 https://drive.google.com/file/d/1c2ytpLZ44CvkR99P6sxtljHpZgqqty6X
+
+## References
+Martin Burtscher, Keshav Pingali - An Efficient CUDA Implementation of the Tree-Based Barnes Hut n-Body Algorithm,
+GPU Computing Gems Emerald Edition,
+Morgan Kaufmann,
+2011,
+Pages 75-92,
+ISBN 9780123849885,
+https://doi.org/10.1016/B978-0-12-384988-5.00006-1.
+(https://www.sciencedirect.com/science/article/pii/B9780123849885000061)
