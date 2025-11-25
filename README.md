@@ -5,13 +5,25 @@ The N-body problem, a fundamental challenge in the field of physics, astrophysic
 
 ## Short Simulation/Execution of Programs for All Implementations
 1. Naive CPU Implementation\
-https://drive.google.com/file/d/1PTybv8xNMW4pyHnmIUZu2qGyMwShtHq3
+
+
+https://github.com/user-attachments/assets/30fda342-11e3-4bf5-971b-f77295875df6
+
+
 
 2. Naive CUDA Implementation\
-https://drive.google.com/file/d/1WOGhtpgsKHZf_yEUXzm89CWfaRtjVuq0
+
+
+https://github.com/user-attachments/assets/c6baf9ae-8dd4-4309-a29b-8e31fe19188c
+
+
 
 3. Barnes-Hut + CUDA Implementation\
-https://drive.google.com/file/d/1-eP6WKkLlPk96OPdO3MZnQIjvVBFStPB
+
+
+https://github.com/user-attachments/assets/541ea4db-8b79-4d12-947b-84d8c18f33aa
+
+
 
 ## Discussion of Parallel Algorithms Implemented in the Program
 
@@ -78,5 +90,5 @@ The performance of each implementation was measured by averaging the execution t
 | **Naive CUDA**| 0 GFLOPS | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS |
 | **Barnes-Hut + CUDA** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** |
 
-## Short Video Presenting the Final Project\
+## Short Video Presenting the Final Project
 https://drive.google.com/file/d/1c2ytpLZ44CvkR99P6sxtljHpZgqqty6X
