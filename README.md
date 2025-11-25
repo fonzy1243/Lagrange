@@ -53,28 +53,30 @@ In this implementation, we reduce the complexity from $O(N^2)$ to $O(N \log N)$ 
 ## Performance Comparisons Between All Three Implementations
 The performance of each implementation was measured by averaging the execution time over 30 runs.
 
-**Table 1: Average Simulation Time of Each Implementation for N_STEPS = XXXXX**
+**Table 1: Average Execution Time Per Step for Each Implementation**
 
-| Implementation | N_BODIES: 10000 | N_BODIES: 100000 | N_BODIES: 1000000 |
-| :--- | :--- | :--- | :--- |
-| **Naive CPU** | 0 s | 0 s | 0 s |
-| **Naive CUDA**| 0 s | 0 s | 0 s |
-| **Barnes-Hut + CUDA** | **0 s** | **0 s** | **0 s** |
+| Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
+| :--- | :--- | :--- | :--- | :--- |
+| **Naive CPU** | 0 s | 0 s | 0 s | 0 s |
+| **Naive CUDA**| 0 s | 0 s | 0 s | 0 s |
+| **Barnes-Hut + CUDA** | **0 s** | **0 s** | **0 s** | **0 s** |
 
 **Table 2: Speedup Factor Relative to the Naive CPU Implementation**
 
-| Implementation | N_BODIES: 10000 | N_BODIES: 100000 | N_BODIES: 1000000 |
-| :--- |:----------------|:-----------------|:------------------|
-| **Naive CUDA**| 0x              | 0x               | 0x                |
-| **Barnes-Hut + CUDA** | **0x**          | **0x**           | **0x**            |
 
-**Table 3: GFLOPS Comparison of Each Implementation for N_STEPS = XXXXX**
+| Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
+| :--- | :--- | :--- | :--- | :--- |
+| **Naive CUDA**| 0x | 0x | 0x | 0x |
+| **Barnes-Hut + CUDA** | **0x** | **0x** | **0x** | **0x** |
 
-| Implementation | N_BODIES: 10000      | N_BODIES: 100000           | N_BODIES: 1000000           |
-| :--- |:---------------------|:---------------------------|:----------------------------|
-| **Naive CPU** | 0 GFLOPS             | 0 GFLOPS                   | 0 GFLOPS                          |
-| **Naive CUDA**| 0 GFLOPS             | 0 GFLOPS                   | 0 GFLOPS                    |
-| **Barnes-Hut + CUDA** | **0 GFLOPS**               | **0 GFLOPS**                     | **0 GFLOPS**                |
+**Table 3: GFLOPS Comparison of Each Implementation**
+
+
+| Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
+| :--- | :--- | :--- | :--- | :--- |
+| **Naive CPU** | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS |
+| **Naive CUDA**| 0 GFLOPS | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS |
+| **Barnes-Hut + CUDA** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** |
 
 ## Short Video Presenting the Final Project
 Insert video here.
