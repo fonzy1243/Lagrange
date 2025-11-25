@@ -3,15 +3,15 @@
 ## Abstract
 The N-body problem, a fundamental challenge in the field of physics, astrophysics, and molecular mechanics, involves the calculation of pairwise interactions among a system of particles. Traditional CPU-based implementations of this problem struggle with large-scale simulations due to the square growth of the number of interactions, which imposes a significant computational overhead. To address this, we propose leveraging NVIDIA’s Compute Unified Device Architecture (CUDA) and its Single Instruction Multiple Threads (SIMT) model to speed up these computations. Utilizing CUDA C++ as the primary programming language, we aim to compare the baseline performance of the algorithm with O(N2) force calculations to a parallelized implementation, including various memory and algorithmic optimizations, in terms of the metrics of execution time, memory bandwidth, and GFLOPS, among others. The project will be implemented primarily on a GPU platform, whereas the software stack includes CUDA Toolkit, NVCC, OpenGL, and NVIDIA Nsight Systems.
 
-## Screenshot of Execution of Programs for All Versions
+## Short Simulation/Execution of Programs for All Implementations
 1. Naive CPU Implementation\
-Insert screenshot here.
+https://drive.google.com/file/d/1PTybv8xNMW4pyHnmIUZu2qGyMwShtHq3
 
 2. Naive CUDA Implementation\
-Insert screenshot here.
+https://drive.google.com/file/d/1WOGhtpgsKHZf_yEUXzm89CWfaRtjVuq0
 
 3. Barnes-Hut + CUDA Implementation\
-Insert screenshot here.
+https://drive.google.com/file/d/1-eP6WKkLlPk96OPdO3MZnQIjvVBFStPB
 
 ## Discussion of Parallel Algorithms Implemented in the Program
 
@@ -78,5 +78,5 @@ The performance of each implementation was measured by averaging the execution t
 | **Naive CUDA**| 0 GFLOPS | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS |
 | **Barnes-Hut + CUDA** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** |
 
-## Short Video Presenting the Final Project
-Insert video here.
+## Short Video Presenting the Final Project\
+https://drive.google.com/file/d/1c2ytpLZ44CvkR99P6sxtljHpZgqqty6X
