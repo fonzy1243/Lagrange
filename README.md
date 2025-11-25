@@ -69,26 +69,28 @@ The performance of each implementation was measured by averaging the execution t
 
 | Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Naive CPU** | 0 s | 0 s | 0 s | 0 s |
-| **Naive CUDA**| 0 s | 0 s | 0 s | 0 s |
-| **Barnes-Hut + CUDA** | **0 s** | **0 s** | **0 s** | **0 s** |
+| **Naive CPU** | 0.2156 ms | 19.3523 ms | N/A | N/A |
+| **Naive CUDA**| 0.07272 ms | 0.156997 ms | 2.49384 ms | N/A |
+| **Barnes-Hut + CUDA** | **0.41221 ms** | **0.65863 ms** | **0.635339 ms** | **1.89589 ms** |
 
 **Table 2: Speedup Factor Relative to the Naive CPU Implementation**
 
-
+Note: Relative speedup is not shown for N_BODIES greater than 10,000 as the CPU implementation does not function at those body counts.
 | Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Naive CUDA**| 0x | 0x | 0x | 0x |
-| **Barnes-Hut + CUDA** | **0x** | **0x** | **0x** | **0x** |
+| **Naive CUDA**| 2.964x | 123.265x | - | - |
+| **Barnes-Hut + CUDA** | **0.523x** | **29.382x** | **-** | **-** |
+
 
 **Table 3: GFLOPS Comparison of Each Implementation**
 
+Note: The Barnes-Hut figure is not the actual GLFOPS, rather it is the equivalent of what it would take based on the naive all-bodies implementation.
 
 | Implementation | N_BODIES: 100 | N_BODIES: 1,000 | N_BODIES: 10,000 | N_BODIES: 500,000 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Naive CPU** | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS |
-| **Naive CUDA**| 0 GFLOPS | 0 GFLOPS | 0 GFLOPS | 0 GFLOPS |
-| **Barnes-Hut + CUDA** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** | **0 GFLOPS** |
+| **Naive CPU** | 0.21606 GFLOPS | 1.0313 GFLOPS | N/A | N/A |
+| **Naive CUDA**| 0.82887 GFLOPS | 82.373 GFLOPS | 795.61 GFLOPS | N/A |
+| **Barnes-Hut + CUDA** | **0.47189 GFLOPS** | **29.9933 GFLOPS** | **2767.23 GFLOPS** | **2.616e+06 GFLOPS** |
 
 ## Short Video Presenting the Final Project
 https://drive.google.com/file/d/1c2ytpLZ44CvkR99P6sxtljHpZgqqty6X
